@@ -1,4 +1,4 @@
-package guru.springframework.fruitshoprestapireactive;
+package guru.springframework.sfgfruitshoprestreactive;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
