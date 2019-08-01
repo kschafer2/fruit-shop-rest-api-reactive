@@ -17,6 +17,7 @@ import static org.mockito.BDDMockito.given;
 public class CategoryControllerTest {
 
     public static final String ID = "id";
+    public static final String CATEGORY_ID_URL = CATEGORIES_BASE_URL + "/" + ID;
     WebTestClient webTestClient;
     CategoryRepository categoryRepository;
     CategoryController categoryController;
@@ -49,7 +50,7 @@ public class CategoryControllerTest {
                 .willReturn(Mono.just(Category.builder().name("name").build()));
 
         webTestClient.get()
-                .uri(CATEGORIES_BASE_URL + "/" + ID)
+                .uri(CATEGORY_ID_URL)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Category.class);
@@ -60,13 +61,28 @@ public class CategoryControllerTest {
         given(categoryRepository.saveAll(any(Publisher.class)))
                 .willReturn(Flux.just(new Category()));
 
-        Mono<Category> categoryMono = Mono.just(new Category());
+        Mono<Category> categoryToSave = Mono.just(new Category());
 
         webTestClient.post()
                 .uri(CATEGORIES_BASE_URL)
-                .body(categoryMono, Category.class)
+                .body(categoryToSave, Category.class)
                 .exchange()
                 .expectStatus()
                 .isCreated();
+    }
+
+    @Test
+    public void overwriteCategoryTest() {
+        given(categoryRepository.save(any(Category.class)))
+                .willReturn(Mono.just(new Category()));
+
+        Mono<Category> categoryToUpdate = Mono.just(new Category());
+
+        webTestClient.put()
+                .uri(CATEGORY_ID_URL)
+                .body(categoryToUpdate, Category.class)
+                .exchange()
+                .expectStatus()
+                .isOk();
     }
 }

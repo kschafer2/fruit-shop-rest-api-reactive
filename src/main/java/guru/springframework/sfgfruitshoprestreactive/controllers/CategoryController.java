@@ -37,4 +37,11 @@ public class CategoryController {
     public Mono<Void> createNewCategory(@RequestBody Publisher<Category> categoryPublisher) {
         return categoryRepository.saveAll(categoryPublisher).then();
     }
+
+    @PutMapping("/{id}")
+    Mono<Category> overwriteCategory(@PathVariable String id, @RequestBody Category category) {
+        category.setId(id);
+
+        return categoryRepository.save(category);
+    }
 }
