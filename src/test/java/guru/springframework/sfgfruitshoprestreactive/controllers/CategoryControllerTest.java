@@ -5,11 +5,13 @@ import guru.springframework.sfgfruitshoprestreactive.repositories.CategoryReposi
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.reactivestreams.Publisher;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static guru.springframework.sfgfruitshoprestreactive.controllers.CategoryController.CATEGORIES_BASE_URL;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 public class CategoryControllerTest {
@@ -51,5 +53,20 @@ public class CategoryControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Category.class);
+    }
+
+    @Test
+    public void createNewCategoryTest() {
+        given(categoryRepository.saveAll(any(Publisher.class)))
+                .willReturn(Flux.just(new Category()));
+
+        Mono<Category> categoryMono = Mono.just(new Category());
+
+        webTestClient.post()
+                .uri(CATEGORIES_BASE_URL)
+                .body(categoryMono, Category.class)
+                .exchange()
+                .expectStatus()
+                .isCreated();
     }
 }
