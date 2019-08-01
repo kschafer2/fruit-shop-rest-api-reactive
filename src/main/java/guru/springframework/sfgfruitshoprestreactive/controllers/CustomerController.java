@@ -2,10 +2,9 @@ package guru.springframework.sfgfruitshoprestreactive.controllers;
 
 import guru.springframework.sfgfruitshoprestreactive.domain.Customer;
 import guru.springframework.sfgfruitshoprestreactive.repositories.CustomerRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.reactivestreams.Publisher;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -30,6 +29,12 @@ public class CustomerController {
     @GetMapping("/{id}")
     public Mono<Customer> getCustomerById(@PathVariable String id) {
         return customerRepository.findById(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<Void> createNewCustomer(@RequestBody Publisher<Customer> customerPublisher) {
+        return customerRepository.saveAll(customerPublisher).then();
     }
 
 }
