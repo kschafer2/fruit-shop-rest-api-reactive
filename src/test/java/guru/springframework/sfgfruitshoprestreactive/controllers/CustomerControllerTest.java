@@ -17,6 +17,7 @@ import static org.mockito.BDDMockito.given;
 public class CustomerControllerTest {
 
     public static final String ID = "id";
+    public static final String CUSTOMER_ID_URL = CUSTOMERS_BASE_URL + "/" + ID;
     CustomerRepository customerRepository;
     CustomerController customerController;
     WebTestClient webTestClient;
@@ -66,5 +67,20 @@ public class CustomerControllerTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
+    }
+
+    @Test
+    public void overwriteCustomer() {
+        given(customerRepository.save(any(Customer.class)))
+                .willReturn(Mono.just(new Customer()));
+
+        Mono<Customer> updatedCustomer = Mono.just(new Customer());
+
+        webTestClient.put()
+                .uri(CUSTOMER_ID_URL)
+                .body(updatedCustomer, Customer.class)
+                .exchange()
+                .expectStatus()
+                .isOk();
     }
 }

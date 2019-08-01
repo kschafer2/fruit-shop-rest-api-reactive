@@ -37,4 +37,10 @@ public class CustomerController {
         return customerRepository.saveAll(customerPublisher).then();
     }
 
+    @PutMapping("/{id}")
+    public Mono<Customer> overwriteCustomer(@PathVariable String id, @RequestBody Customer customer) {
+        customer.setId(id);
+
+        return customerRepository.save(customer);
+    }
 }
