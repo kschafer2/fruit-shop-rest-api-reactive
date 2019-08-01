@@ -9,6 +9,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import static guru.springframework.sfgfruitshoprestreactive.controllers.CategoryController.CATEGORIES_BASE_URL;
 import static org.mockito.BDDMockito.given;
 
 public class CategoryControllerTest {
@@ -33,8 +34,9 @@ public class CategoryControllerTest {
                 Category.builder().name("name2").build()));
 
         webTestClient.get()
-                .uri("/api/v1/categories")
+                .uri(CATEGORIES_BASE_URL)
                 .exchange()
+                .expectStatus().isOk()
                 .expectBodyList(Category.class)
                 .hasSize(2);
     }
@@ -45,8 +47,9 @@ public class CategoryControllerTest {
                 .willReturn(Mono.just(Category.builder().name("name").build()));
 
         webTestClient.get()
-                .uri("/api/v1/categories" + ID)
+                .uri(CATEGORIES_BASE_URL + "/" + ID)
                 .exchange()
+                .expectStatus().isOk()
                 .expectBody(Category.class);
     }
 }

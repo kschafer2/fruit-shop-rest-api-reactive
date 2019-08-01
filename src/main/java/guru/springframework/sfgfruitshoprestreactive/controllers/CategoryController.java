@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import static guru.springframework.sfgfruitshoprestreactive.controllers.CategoryController.CATEGORIES_BASE_URL;
+
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping(CATEGORIES_BASE_URL)
 public class CategoryController {
 
+    public static final String CATEGORIES_BASE_URL = "/api/v1/categories";
     private final CategoryRepository categoryRepository;
 
     public CategoryController(CategoryRepository categoryRepository) {
